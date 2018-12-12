@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.yourcompany.newapp</groupId>
+    <artifactId>newapp-springboot</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>spring-boot-cache-greeting</artifactId>
+  <name>Spring Boot - Cache Booster - Greeting Service</name>
+  <description>Spring Boot - Cache Booster - Greeting Service</description>
+  <properties>
+    <!--
+            The following two properties must match.
+            The Infinispan starter does try to enforce the same
+            infinispan version (by including the BOM) but it's not always
+            guaranteed to work - due to the way Maven decides the effective version.
+            By including the BOM manually and keeping these two properties in sync,
+            we can be sure that correct Infinispan dependencies are always used
+        -->
+    <version.infinispan.starter>1.0.2.Final</version.infinispan.starter>
+    <version.infinispan>9.2.5.Final</version.infinispan>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-bom</artifactId>
+        <version>${version.infinispan}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+      <version>${spring-boot.version}</version>
+    </dependency>
+    <!-- Testing -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Needed to force the tests to work in embedded mode -->
+    <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-spring-boot-starter-embedded</artifactId>
+      <version>${version.infinispan.starter}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <profiles>
+    <profile>
+      <id>local</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-spring-boot-starter-embedded</artifactId>
+          <version>${version.infinispan.starter}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>openshift</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-spring-boot-starter-remote</artifactId>
+          <version>${version.infinispan.starter}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>
+
